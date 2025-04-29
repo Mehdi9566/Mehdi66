@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Maintenance Préventive</title>
+
+  <!-- Intégration de Font Awesome pour les cadenas -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: Arial, sans-serif;
+      color: white;
+      overflow-x: hidden;
+      overflow-y: auto;
+      user-select: none;
+      position: relative;
+    }
+
+    /* Vidéo de fond */
+    #background-video {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+    }
+
+    /* Effet de scan */
+    .scan-effect {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to bottom, transparent 0%, rgba(0,150,255,0.12) 50%, transparent 100%);
+      animation: scan 5s linear infinite;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    @keyframes scan {
+      0% { transform: translateY(-100%); }
+      100% { transform: translateY(100%); }
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 3em;
+      margin-top: 50px;
+      margin-bottom: 60px;
+      color: #80c0ff;
+      text-shadow: 0 0 15px #3399ff;
+      position: relative;
+      z-index: 2;
+    }
+
+    .subtitle {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 2em;
+      color: #80c0ff;
+      text-shadow: 0 0 15px #3399ff;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .levels {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .level {
+      background-color: rgba(255, 255, 255, 0.1);
+      border: 2px solid #3399ff;
+      padding: 30px;
+      border-radius: 15px;
+      width: 250px;
+      text-align: center;
+      transition: 0.3s;
+      cursor: pointer;
+      backdrop-filter: blur(10px);
+    }
+
+    .level:hover {
+      background-color: rgba(51, 153, 255, 0.2);
+      transform: scale(1.05);
+    }
+
+    .level h2 {
+      color: #b3d9ff;
+      margin-bottom: 15px;
+    }
+
+    .level p {
+      font-size: 0.9em;
+      color: #e0e0e0;
+    }
+
+    .cases-container {
+      display: none;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      padding: 20px;
+      max-width: 1000px;
+      margin: 0 auto 50px auto;
+      position: relative;
+      z-index: 2;
+      opacity: 0;
+      animation: fadeIn 1s forwards;
+    }
+
+    .case {
+      overflow: hidden;
+      border-radius: 15px;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+
+    .case img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+      display: block;
+    }
+
+    .case:hover img {
+      transform: scale(1.05);
+    }
+
+    @keyframes fadeIn {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+
+    .back-btn {
+      display: none;
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      padding: 10px 20px;
+      background-color: rgba(51, 153, 255, 0.7);
+      border: none;
+      color: white;
+      border-radius: 10px;
+      font-size: 1.2em;
+      cursor: pointer;
+      transition: 0.3s;
+      z-index: 3;
+    }
+
+    .back-btn:hover {
+      background-color: rgba(51, 153, 255, 1);
+      transform: scale(1.05);
+    }
+
+    .password-popup {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 4;
+    }
+
+    .popup-content {
+      background: rgba(0, 0, 0, 0.8);
+      padding: 30px;
+      border-radius: 15px;
+      text-align: center;
+      box-shadow: 0 0 15px 5px rgba(51, 153, 255, 0.6);
+      backdrop-filter: blur(8px);
+      animation: hologram 1s ease-in-out infinite;
+    }
+
+    @keyframes hologram {
+      0%, 100% { transform: scale(1); box-shadow: 0 0 10px rgba(51, 153, 255, 0.6); }
+      50% { transform: scale(1.05); box-shadow: 0 0 25px rgba(51, 153, 255, 0.8); }
+    }
+
+    .popup-content h3 {
+      margin-bottom: 20px;
+      color: #3399ff;
+      font-size: 1.5em;
+    }
+
+    .popup-content input {
+      padding: 10px;
+      border: 2px solid #3399ff;
+      border-radius: 15px;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      width: 80%;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .popup-content button {
+      padding: 12px 24px;
+      background: #3399ff;
+      color: white;
+      border: none;
+      border-radius: 15px;
+      font-size: 1.2em;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .popup-content button:hover {
+      background-color: #66b2ff;
+      transform: scale(1.05);
+    }
+  </style>
+
+  <script>
+    let currentLevel = '';
+
+    function showNiveau1Cases() {
+      currentLevel = 'niveau1';
+      document.querySelector('.levels').style.display = 'none';
+      document.querySelector('.cases-container').style.display = 'grid';
+      document.querySelector('.back-btn').style.display = 'block';
+    }
+
+    function showNiveau2Cases() {
+      currentLevel = 'niveau2';
+      document.querySelector('.levels').style.display = 'none';
+      document.querySelector('.cases-container').style.display = 'grid';
+      document.querySelector('.back-btn').style.display = 'block';
+    }
+
+    function showNiveau3Cases() {
+      currentLevel = 'niveau3';
+      document.querySelector('.levels').style.display = 'none';
+      document.querySelector('.cases-container').style.display = 'grid';
+      document.querySelector('.back-btn').style.display = 'block';
+    }
+
+    function goBack() {
+      document.querySelector('.cases-container').style.display = 'none';
+      document.querySelector('.levels').style.display = 'flex';
+      document.querySelector('.back-btn').style.display = 'none';
+    }
+
+    function showPasswordPopup(level) {
+      currentLevel = level;
+      document.querySelector('.password-popup').style.display = 'flex';
+    }
+
+    function validatePassword() {
+      const password = document.querySelector('.password-input').value;
+      if (password === '1234') {
+        document.querySelector('.password-popup').style.display = 'none';
+        if (currentLevel === 'niveau2') {
+          showNiveau2Cases();
+        } else if (currentLevel === 'niveau3') {
+          showNiveau3Cases();
+        }
+      } else {
+        alert('Mot de passe incorrect');
+      }
+    }
+
+    window.onclick = function(event) {
+      const popup = document.querySelector('.password-popup');
+      if (event.target === popup) {
+        popup.style.display = 'none';
+      }
+    }
+
+    window.onload = function() {
+      document.querySelector('.password-input').addEventListener('keyup', function(event) {
+        if (event.key === 'Enter') {
+          event.preventDefault();
+          validatePassword();
+        }
+      });
+    }
+  </script>
+</head>
+
+<body>
+
+  <!-- Vidéo de fond -->
+  <video id="background-video" autoplay muted loop playsinline>
+    <source src="fondpage.mp4" type="video/mp4">
+    Ton navigateur ne supporte pas la vidéo HTML5.
+  </video>
+
+  <div class="scan-effect"></div>
+
+  <h1>Maintenance Préventive</h1>
+
+  <!-- Niveaux -->
+  <div class="levels">
+    <div class="level" onclick="showNiveau1Cases()">
+      <h2>Niveau 1</h2>
+      <p>Maintenance de base, réalisée par les opérateurs.</p>
+    </div>
+
+    <div class="level" onclick="showPasswordPopup('niveau2')">
+      <h2>Niveau 2</h2>
+      <p>Interventions techniques simples, effectuées par la maintenance.</p>
+      <i class="fas fa-lock" style="color: orange; font-size: 40px; margin-top: 10px;"></i>
+    </div>
+
+    <div class="level" onclick="showPasswordPopup('niveau3')">
+      <h2>Niveau 3</h2>
+      <p>Maintenance complexe, réalisée par des experts ou externes.</p>
+      <i class="fas fa-lock" style="color: red; font-size: 40px; margin-top: 10px;"></i>
+    </div>
+  </div>
+
+  <!-- Bouton Retour -->
+  <button class="back-btn" onclick="goBack()">Retour à l'accueil</button>
+
+  <!-- Cases -->
+  <div class="cases-container">
+    <div class="case" onclick="window.location.href='Fichegraissagecoupeenbout.html'">
+      <img src="fiche11.png" alt="Fiche 1">
+    </div>
+    <div class="case" onclick="window.location.href='graissagecoupeenbout3.png'">
+      <img src="graissagecoupeenbout3.png" alt="Fiche 2">
+    </div>
+    <div class="case" onclick="window.location.href='fiche3.html'">
+      <img src="image3.jpg" alt="Fiche 3">
+    </div>
+    <div class="case" onclick="window.location.href='fiche4.html'">
+      <img src="image4.jpg" alt="Fiche 4">
+    </div>
+  </div>
+
+  <!-- Sous-titre fixé en bas -->
+  <h2 class="subtitle">Plaqueuse de chant Stream A</h2>
+
+  <!-- Pop-up mot de passe -->
+  <div class="password-popup">
+    <div class="popup-content">
+      <h3>Entrez le mot de passe</h3>
+      <input type="password" class="password-input" placeholder="Mot de passe" />
+      <button onclick="validatePassword()">Valider</button>
+    </div>
+  </div>
+
+</body>
+</html>
