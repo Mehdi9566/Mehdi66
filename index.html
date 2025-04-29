@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <title>Maintenance Préventive</title>
 
-  <!-- Intégration de Font Awesome pour les cadenas -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 
   <style>
@@ -24,7 +23,6 @@
       position: relative;
     }
 
-    /* Vidéo de fond */
     #background-video {
       position: fixed;
       top: 0;
@@ -35,7 +33,6 @@
       z-index: 0;
     }
 
-    /* Effet de scan */
     .scan-effect {
       position: fixed;
       top: 0;
@@ -235,59 +232,86 @@
 
   <script>
     let currentLevel = '';
+    let niveau2Debloque = false;
 
     function showNiveau1Cases() {
       currentLevel = 'niveau1';
       document.querySelector('.levels').style.display = 'none';
-      document.querySelector('.cases-container').style.display = 'grid';
+      document.querySelector('#cases-niveau1').style.display = 'grid';
+      document.querySelector('#cases-niveau2').style.display = 'none';
+      document.querySelector('#cases-niveau3').style.display = 'none';
       document.querySelector('.back-btn').style.display = 'block';
     }
 
     function showNiveau2Cases() {
       currentLevel = 'niveau2';
       document.querySelector('.levels').style.display = 'none';
-      document.querySelector('.cases-container').style.display = 'grid';
+      document.querySelector('#cases-niveau1').style.display = 'none';
+      document.querySelector('#cases-niveau2').style.display = 'grid';
+      document.querySelector('#cases-niveau3').style.display = 'none';
       document.querySelector('.back-btn').style.display = 'block';
     }
 
     function showNiveau3Cases() {
       currentLevel = 'niveau3';
       document.querySelector('.levels').style.display = 'none';
-      document.querySelector('.cases-container').style.display = 'grid';
+      document.querySelector('#cases-niveau1').style.display = 'none';
+      document.querySelector('#cases-niveau2').style.display = 'none';
+      document.querySelector('#cases-niveau3').style.display = 'grid';
       document.querySelector('.back-btn').style.display = 'block';
     }
 
     function goBack() {
-      document.querySelector('.cases-container').style.display = 'none';
       document.querySelector('.levels').style.display = 'flex';
+      document.querySelectorAll('.cases-container').forEach(c => c.style.display = 'none');
       document.querySelector('.back-btn').style.display = 'none';
     }
 
-    function showPasswordPopup(level) {
-      currentLevel = level;
-      document.querySelector('.password-popup').style.display = 'flex';
-    }
+    let niveau3Debloque = false;
 
-    function validatePassword() {
-      const password = document.querySelector('.password-input').value;
-      if (password === '1234') {
-        document.querySelector('.password-popup').style.display = 'none';
-        if (currentLevel === 'niveau2') {
-          showNiveau2Cases();
-        } else if (currentLevel === 'niveau3') {
-          showNiveau3Cases();
-        }
-      } else {
-        alert('Mot de passe incorrect');
-      }
-    }
+function showPasswordPopup(level) {
+  if (level === 'niveau2' && niveau2Debloque) {
+    showNiveau2Cases();
+    return;
+  }
+  if (level === 'niveau3' && niveau3Debloque) {
+    showNiveau3Cases();
+    return;
+  }
+  currentLevel = level;
+  document.querySelector('.password-popup').style.display = 'flex';
+}
 
-    window.onclick = function(event) {
-      const popup = document.querySelector('.password-popup');
-      if (event.target === popup) {
-        popup.style.display = 'none';
-      }
+function validatePassword() {
+  const password = document.querySelector('.password-input').value;
+
+  if (currentLevel === 'niveau2') {
+    const lockIcon = document.getElementById('lock-icon-niveau2');
+    if (password === '1234') {
+      document.querySelector('.password-popup').style.display = 'none';
+      niveau2Debloque = true;
+      lockIcon.classList.remove('fa-lock');
+      lockIcon.classList.add('fa-lock-open');
+      lockIcon.style.color = 'green';
+      showNiveau2Cases();
+    } else {
+      alert('Mot de passe incorrect');
     }
+  } else if (currentLevel === 'niveau3') {
+    const lockIcon = document.getElementById('lock-icon-niveau3');
+    if (password === '5678') {  // Le mot de passe pour le niveau 3
+      document.querySelector('.password-popup').style.display = 'none';
+      niveau3Debloque = true;
+      lockIcon.classList.remove('fa-lock');
+      lockIcon.classList.add('fa-lock-open');
+      lockIcon.style.color = 'green'; // Le cadenas devient vert
+      showNiveau3Cases();
+    } else {
+      alert('Mot de passe incorrect');
+    }
+  }
+}
+
 
     window.onload = function() {
       document.querySelector('.password-input').addEventListener('keyup', function(event) {
@@ -297,64 +321,65 @@
         }
       });
     }
+
+    window.onclick = function(event) {
+      const popup = document.querySelector('.password-popup');
+      if (event.target === popup) {
+        popup.style.display = 'none';
+      }
+    }
   </script>
 </head>
 
 <body>
-
-  <!-- Vidéo de fond -->
   <video id="background-video" autoplay muted loop playsinline>
     <source src="fondpage.mp4" type="video/mp4">
     Ton navigateur ne supporte pas la vidéo HTML5.
   </video>
 
   <div class="scan-effect"></div>
-
   <h1>Maintenance Préventive</h1>
 
-  <!-- Niveaux -->
   <div class="levels">
     <div class="level" onclick="showNiveau1Cases()">
       <h2>Niveau 1</h2>
       <p>Maintenance de base, réalisée par les opérateurs.</p>
     </div>
-
     <div class="level" onclick="showPasswordPopup('niveau2')">
       <h2>Niveau 2</h2>
       <p>Interventions techniques simples, effectuées par la maintenance.</p>
-      <i class="fas fa-lock" style="color: orange; font-size: 40px; margin-top: 10px;"></i>
+      <i id="lock-icon-niveau2" class="fas fa-lock" style="color: orange; font-size: 40px; margin-top: 10px;"></i>
     </div>
-
     <div class="level" onclick="showPasswordPopup('niveau3')">
-      <h2>Niveau 3</h2>
-      <p>Maintenance complexe, réalisée par des experts ou externes.</p>
-      <i class="fas fa-lock" style="color: red; font-size: 40px; margin-top: 10px;"></i>
-    </div>
+  <h2>Niveau 3</h2>
+  <p>Maintenance complexe, réalisée par des experts ou externes.</p>
+  <i id="lock-icon-niveau3" class="fas fa-lock" style="color: red; font-size: 40px; margin-top: 10px;"></i>
+</div>
   </div>
 
-  <!-- Bouton Retour -->
   <button class="back-btn" onclick="goBack()">Retour à l'accueil</button>
 
-  <!-- Cases -->
-  <div class="cases-container">
-    <div class="case" onclick="window.location.href='Fichegraissagecoupeenbout.html'">
-      <img src="fiche11.png" alt="Fiche 1">
-    </div>
-    <div class="case" onclick="window.location.href='graissagecoupeenbout3.png'">
-      <img src="graissagecoupeenbout3.png" alt="Fiche 2">
-    </div>
-    <div class="case" onclick="window.location.href='fiche3.html'">
-      <img src="image3.jpg" alt="Fiche 3">
-    </div>
-    <div class="case" onclick="window.location.href='fiche4.html'">
-      <img src="image4.jpg" alt="Fiche 4">
-    </div>
+  <div class="cases-container" id="cases-niveau1">
+    <div class="case" onclick="window.location.href='Fichegraissagecoupeenbout.html'"><img src="graissagecoupeenbout5.png" alt="Fiche 1"></div>
+    <div class="case" onclick="window.location.href='Fichegraissagegroupeaffleurage.html'"><img src="graissagegrouped'affleurage.png" alt="Fiche 2"></div>
+    <div class="case" onclick="window.location.href='fiche3.html'"><img src="image3.jpg" alt="Fiche 3"></div>
+    <div class="case" onclick="window.location.href='fiche4.html'"><img src="fiche11.jpg" alt="Fiche 4"></div>
   </div>
 
-  <!-- Sous-titre fixé en bas -->
+  <div class="cases-container" id="cases-niveau2">
+    <div class="case" onclick="window.location.href='fiche5.html'"><img src="image5.jpg" alt="Fiche 5"></div>
+    <div class="case" onclick="window.location.href='fiche6.html'"><img src="image6.jpg" alt="Fiche 6"></div>
+    <div class="case" onclick="window.location.href='fiche7.html'"><img src="image7.jpg" alt="Fiche 7"></div>
+    <div class="case" onclick="window.location.href='fiche8.html'"><img src="image8.jpg" alt="Fiche 8"></div>
+  </div>
+
+  <div class="cases-container" id="cases-niveau3">
+    <div class="case" onclick="window.location.href='fiche9.html'"><img src="image9.jpg" alt="Fiche 9"></div>
+    <div class="case" onclick="window.location.href='fiche10.html'"><img src="image10.jpg" alt="Fiche 10"></div>
+  </div>
+
   <h2 class="subtitle">Plaqueuse de chant Stream A</h2>
 
-  <!-- Pop-up mot de passe -->
   <div class="password-popup">
     <div class="popup-content">
       <h3>Entrez le mot de passe</h3>
