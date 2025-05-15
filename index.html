@@ -102,16 +102,22 @@
     }
 
    .niveau1 h2 {
+  font-size: 28px;
   color: #228B22; 
   text-shadow: 0 0 10px #1e6b1e; 
 }
+.level.niveau1 h2 {
+  margin-bottom: 25px;
+}
 
 .niveau2 h2 {
+  font-size: 28px;
   color: #FF8C00; 
   text-shadow: 0 0 10px #cc7000; 
 }
 
 .niveau3 h2 {
+  font-size: 28px;
   color: #ff4d4d;
   text-shadow: 0 0 10px #cc0000;
 }
@@ -123,13 +129,9 @@
 .level p {
   margin-top: 0;
   line-height: 1.4;
-font-size: 0.9em;
+font-size: 1em;
       color: #e0e0e0;
 }
-    .level p {
-      font-size: 0.9em;
-      color: #e0e0e0;
-    }
 
     .cases-container {
       display: none;
@@ -217,6 +219,20 @@ font-size: 0.9em;
       50% { transform: scale(1.05); box-shadow: 0 0 25px rgba(51, 153, 255, 0.8); }
     }
 
+
+
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-10px); }
+  40%, 80% { transform: translateX(10px); }
+}
+
+.popup-content.shake {
+  animation: shake 0.5s;
+  box-shadow: 0 0 15px 5px rgba(255, 0, 0, 0.8);
+}
+
     .popup-content h3 {
       margin-bottom: 20px;
       color: #3399ff;
@@ -302,20 +318,26 @@ font-size: 0.9em;
   flex-direction: column;
   align-items: flex-start;
   padding-left: 40px;       /* Garde un retrait visuel */
+margin-top: -40px;
 }
 
-#cases-niveau1 {
-  display: none;
-  flex-direction: column;
-  align-items: flex-start;
-  padding-left: 40px;
-  margin-top: -40px; /* ← Cela remontera visuellement tout le bloc */
-}
 
 
   </style>
 
   <script>
+
+
+function indicateError() {
+  const popup = document.querySelector('.popup-content');
+  const input = document.querySelector('.password-input');
+
+  popup.classList.add('shake');
+  setTimeout(() => popup.classList.remove('shake'), 500);
+
+  input.value = '';
+  input.focus();
+}
     let currentLevel = '';
     let niveau2Debloque = false;
 
@@ -332,7 +354,7 @@ font-size: 0.9em;
       currentLevel = 'niveau2';
       document.querySelector('.levels').style.display = 'none';
       document.querySelector('#cases-niveau1').style.display = 'none';
-      document.querySelector('#cases-niveau2').style.display = 'grid';
+      document.querySelector('#cases-niveau2').style.display = 'flex';
       document.querySelector('#cases-niveau3').style.display = 'none';
       document.querySelector('.back-btn').style.display = 'block';
     }
@@ -342,7 +364,7 @@ font-size: 0.9em;
       document.querySelector('.levels').style.display = 'none';
       document.querySelector('#cases-niveau1').style.display = 'none';
       document.querySelector('#cases-niveau2').style.display = 'none';
-      document.querySelector('#cases-niveau3').style.display = 'grid';
+      document.querySelector('#cases-niveau3').style.display = 'flex';
       document.querySelector('.back-btn').style.display = 'block';
     }
 
@@ -380,7 +402,7 @@ function validatePassword() {
       lockIcon.style.color = 'green';
       showNiveau2Cases();
     } else {
-      alert('Mot de passe incorrect');
+        indicateError();
     }
   } else if (currentLevel === 'niveau3') {
     const lockIcon = document.getElementById('lock-icon-niveau3');
@@ -392,7 +414,7 @@ function validatePassword() {
       lockIcon.style.color = 'green'; // Le cadenas devient vert
       showNiveau3Cases();
     } else {
-      alert('Mot de passe incorrect');
+       indicateError();
     }
   }
 }
@@ -451,27 +473,39 @@ function validatePassword() {
   <div class="case-text" onclick="window.location.href='Fichegraissagegroupeaffleurage.html'">
     Graissage groupe d’affleurage
   </div>
-  <div class="case-text" onclick="window.location.href='fiche3.html'">
-    Contrôle capteurs
+  <div class="case-text" onclick="window.location.href='Fichegraissagegroupearrondisseur.html'">
+    Graissage groupe arrondisseur
   </div>
-  <div class="case-text" onclick="window.location.href='fiche4.html'">
-    Nettoyage des convoyeurs
+  <div class="case-text" onclick="window.location.href='Fichegraissageracleurdechant.html'">
+    Graissage racleur de chant
   </div>
 </div>
 
 
 
 
-  <div class="cases-container" id="cases-niveau2">
-    <div class="case" onclick="window.location.href='fiche5.html'"><img src="image5.jpg" alt="Fiche 5"></div>
-    <div class="case" onclick="window.location.href='fiche6.html'"><img src="image6.jpg" alt="Fiche 6"></div>
-    <div class="case" onclick="window.location.href='fiche7.html'"><img src="image7.jpg" alt="Fiche 7"></div>
-    <div class="case" onclick="window.location.href='fiche8.html'"><img src="image8.jpg" alt="Fiche 8"></div>
+  <div class="cases-container left-column" id="cases-niveau2">
+  <div class="case-text" onclick="window.location.href='Fichefibreoptique.html'">
+    Nettoyage de la fibre optique
   </div>
+  <div class="case-text" onclick="window.location.href='Fichebacacolle.html'">
+    Réglage du bac à colle
+  </div>
+  <div class="case-text" onclick="window.location.href='Ficherouleaucompresseur.html'">
+    Nettoyage du rouleau compresseur
+  </div>
+  <div class="case-text" onclick="window.location.href='Ficheguillotine.html'">
+    Nettoyage de la guillotine
+  </div>
+</div>
 
-  <div class="cases-container" id="cases-niveau3">
-    <div class="case" onclick="window.location.href='fiche9.html'"><img src="image9.jpg" alt="Fiche 9"></div>
-    <div class="case" onclick="window.location.href='fiche10.html'"><img src="image10.jpg" alt="Fiche 10"></div>
+  <div class="cases-container left-column" id="cases-niveau3">
+   <div class="case-text" onclick="window.location.href='Ficherouleaucompresseur.html'">
+    Remplacement et recalibrage du groupe arrondisseur
+  </div>
+  <div class="case-text" onclick="window.location.href='Ficheguillotine.html'">
+   Diagnostic et remplacement d’un moteur affleureur
+  </div>
   </div>
 
   <h2 class="subtitle">Plaqueuse de chant Stream A</h2>
