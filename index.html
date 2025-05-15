@@ -101,11 +101,31 @@
       transform: scale(1.05);
     }
 
-    .level h2 {
-      color: #b3d9ff;
-      margin-bottom: 15px;
-    }
+   .niveau1 h2 {
+  color: #228B22; 
+  text-shadow: 0 0 10px #1e6b1e; 
+}
 
+.niveau2 h2 {
+  color: #FF8C00; 
+  text-shadow: 0 0 10px #cc7000; 
+}
+
+.niveau3 h2 {
+  color: #ff4d4d;
+  text-shadow: 0 0 10px #cc0000;
+}
+
+.level h2 {
+  margin-bottom: 8px;
+}
+
+.level p {
+  margin-top: 0;
+  line-height: 1.4;
+font-size: 0.9em;
+      color: #e0e0e0;
+}
     .level p {
       font-size: 0.9em;
       color: #e0e0e0;
@@ -406,16 +426,16 @@ function validatePassword() {
   <h1>Maintenance Préventive</h1>
 
   <div class="levels">
-    <div class="level" onclick="showNiveau1Cases()">
+    <div class="level niveau1" onclick="showNiveau1Cases()">
       <h2>Niveau 1</h2>
       <p>Maintenance de base, réalisée par les opérateurs.</p>
     </div>
-    <div class="level" onclick="showPasswordPopup('niveau2')">
+    <div class="level niveau2" onclick="showPasswordPopup('niveau2')">
       <h2>Niveau 2</h2>
       <p>Interventions techniques simples, effectuées par la maintenance.</p>
       <i id="lock-icon-niveau2" class="fas fa-lock" style="color: orange; font-size: 40px; margin-top: 10px;"></i>
     </div>
-    <div class="level" onclick="showPasswordPopup('niveau3')">
+    <div class="level niveau3" onclick="showPasswordPopup('niveau3')">
   <h2>Niveau 3</h2>
   <p>Maintenance complexe, réalisée par des experts ou externes.</p>
   <i id="lock-icon-niveau3" class="fas fa-lock" style="color: red; font-size: 40px; margin-top: 10px;"></i>
