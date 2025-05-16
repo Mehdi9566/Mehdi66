@@ -116,12 +116,20 @@
   text-shadow: 0 0 10px #cc7000; 
 }
 
+#cases-niveau2 {
+  position: relative;  /* pour que top fonctionne */
+  top: -20px;         /* déplace vers le haut de 100px */
+}
+
 .niveau3 h2 {
   font-size: 28px;
   color: #ff4d4d;
   text-shadow: 0 0 10px #cc0000;
 }
-
+#cases-niveau3 {
+  position: relative;  /* pour que top fonctionne */
+  top: 70px;         /* déplace vers le haut de 100px */
+}
 .level h2 {
   margin-bottom: 8px;
 }
@@ -277,7 +285,7 @@ font-size: 1em;
   margin: 10px 0;
   border-radius: 10px;
   color: #80c0ff;
-  font-size: 1.5em;
+  font-size: 1.7em;
   line-height: 1.3;             /* aère les lignes si multi‑ligne */
   letter-spacing: 0.5px;        /* légèrement espacé */
   text-align: center;             /* ou center / justify */
@@ -340,6 +348,8 @@ function indicateError() {
 }
     let currentLevel = '';
     let niveau2Debloque = false;
+    let niveau3Debloque = false;
+    let lastPasswordN2 = '';
 
     function showNiveau1Cases() {
       currentLevel = 'niveau1';
@@ -374,47 +384,55 @@ function indicateError() {
       document.querySelector('.back-btn').style.display = 'none';
     }
 
-    let niveau3Debloque = false;
-
 function showPasswordPopup(level) {
-  if (level === 'niveau2' && niveau2Debloque) {
-    showNiveau2Cases();
-    return;
-  }
-  if (level === 'niveau3' && niveau3Debloque) {
-    showNiveau3Cases();
-    return;
-  }
+  // si déjà débloqué, on affiche directement
+  if (level === 'niveau2' && niveau2Debloque) { showNiveau2Cases(); return; }
+  if (level === 'niveau3' && niveau3Debloque) { showNiveau3Cases(); return; }
+
   currentLevel = level;
-  document.querySelector('.password-popup').style.display = 'flex';
+  const popup = document.querySelector('.password-popup');
+  const inputEl = document.querySelector('.password-input');
+
+  // pré-remplir uniquement pour le niveau 2
+  if (level === 'niveau2') {
+    inputEl.value = lastPasswordN2;
+  } else {
+    inputEl.value = '';      // niveau 3 reste vide
+  }
+
+  popup.style.display = 'flex';
+  inputEl.focus();
 }
 
+
 function validatePassword() {
-  const password = document.querySelector('.password-input').value;
+  const inputEl = document.querySelector('.password-input');
+  const password = inputEl.value;
 
   if (currentLevel === 'niveau2') {
+    // mémorisation pour niveau 2
+    lastPasswordN2 = password;
     const lockIcon = document.getElementById('lock-icon-niveau2');
     if (password === '1234') {
       document.querySelector('.password-popup').style.display = 'none';
       niveau2Debloque = true;
-      lockIcon.classList.remove('fa-lock');
-      lockIcon.classList.add('fa-lock-open');
+      lockIcon.classList.replace('fa-lock','fa-lock-open');
       lockIcon.style.color = 'green';
       showNiveau2Cases();
     } else {
-        indicateError();
+      indicateError();
     }
+
   } else if (currentLevel === 'niveau3') {
     const lockIcon = document.getElementById('lock-icon-niveau3');
-    if (password === '5678') {  // Le mot de passe pour le niveau 3
+    if (password === '5678') {
       document.querySelector('.password-popup').style.display = 'none';
       niveau3Debloque = true;
-      lockIcon.classList.remove('fa-lock');
-      lockIcon.classList.add('fa-lock-open');
-      lockIcon.style.color = 'green'; // Le cadenas devient vert
+      lockIcon.classList.replace('fa-lock','fa-lock-open');
+      lockIcon.style.color = 'green';
       showNiveau3Cases();
     } else {
-       indicateError();
+      indicateError();
     }
   }
 }
